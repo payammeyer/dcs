@@ -1,0 +1,17 @@
+This project is an aggregator POM for releasing the various DCS services
+projects.
+
+Although all projects are contained within the same svn source 
+repository, they have separate branches, tags, and trunks.  This complicates
+release via the release plugin.   The solution is to use the exec maven
+plugin to invoke the release plugin separately on each project.  For example:
+
+mvn exec:exec -Paggregate_release -Dexec.executable=mvn -Dexec.args="release:prepare deploy release:perform -Dgoals=deploy -Dtag=1.1.0 -DreleaseVersion=1.1.0 -DdevelopmentVersion=1.2.0-SNAPSHOT"
+
+This will cause an appropriate tags directory to be created, and the release
+and snapshot artifacts deployed to the appropriate repositories.  Sites can
+be deployed in a separate step.
+
+
+See also:
+https://scm.dataconservancy.org/confluence/x/fwLO

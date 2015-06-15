@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- 
+    $Id: pom.xml 4458 2012-08-31 02:15:42Z emetsger $
+    $URL: https://scm.dataconservancy.org/svn/release/dcs-frontend/trunk/pom.xml $
+  -->
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.dataconservancy.release</groupId>
+  <artifactId>dcs-ui</artifactId>
+  <packaging>pom</packaging>
+  <version>1.1.1-SNAPSHOT</version>
+  <name>DC Reference UI Release POM</name>
+  <description>A POM aggregating all of the resources necessary to release the Data Conservancy Reference UI</description>
+
+  <url>http://maven.dataconservancy.org/sites/release/dcs-frontend</url>
+
+  <parent>
+    <groupId>org.dataconservancy</groupId>
+    <artifactId>parent-pom</artifactId>
+    <version>1.0.4-SNAPSHOT</version>
+  </parent>
+
+  <profiles>
+    <profile>
+      <id>aggregate_release</id>
+      <activation>
+        <property>
+          <name>all</name>
+        </property>
+      </activation>
+
+      <!-- Modules  =================================================== -->
+
+      <modules>
+        <module>../../../dcs-frontend/trunk</module>
+      </modules>
+      
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>exec-maven-plugin</artifactId>
+              <version>1.2.1</version>
+              <configuration>
+                <skip>true</skip>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
+
+  <!-- Build  ===================================================== -->
+
+  <build>
+
+    <!-- TODO: Perhaps move this to a parent pom, so license configuration isn't
+         maintained in multiple places.  -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>1.0-beta-1</version>
+          <executions>
+            <execution>
+              <id>default-cli</id>
+              <configuration>
+
+                <!-- Each licenseMerge element delimits (using '|') equivilant licenses that differ in name only.  
+                  This pretties-up the 3rd party license report -->
+                <licenseMerges>
+                  <licenseMerge>Apache Software License, Version 1.1|The Apache Software License, Version 1.1</licenseMerge>
+                  <licenseMerge>Apache Software License, Version 2.0|The Apache Software License, Version 2.0|Apache License, Version 2.0|Apache 2|Apache License Version 2.0|Apache Software License - Version 2.0|Apache License V2.0</licenseMerge>
+                  <licenseMerge>GNU Lesser General Public License (LGPL)|GNU LESSER GENERAL PUBLIC LICENSE|GNU Lesser General Public License</licenseMerge>
+                  <licenseMerge>GNU Lesser General Public License (LGPL), Version 2.1|GNU Lesser General Public License, Version 2.1</licenseMerge>
+                  <licenseMerge>GNU General Public License (GPL), Version 2 (with "classpath" exception)|GPL2 w/ CPE|GPLv2 with classpath exception|GNU General Public License, Version 2 (with Oracle "classpath" exception)</licenseMerge>
+                  <licenseMerge>GNU Lesser General Public License (LGPL), Version 3.0|GNU Lesser General Public License, Version 3.0</licenseMerge>
+                  <licenseMerge>MIT License|The MIT License</licenseMerge>
+                  <licenseMerge>BSD Style|BSD-style license|BSD style|DOM4J BSD-style license</licenseMerge>
+                  <licenseMerge>BSD License|BSD</licenseMerge>
+                  <licenseMerge>Sun Binary Code License Agreement|Sun Binary Code License Agreement, EJB 3.0|Sun Binary Code License Agreement, JMS 1.1|Sun Binary Code License Agreement, Servlet API 2.3|Sun Binary Code License Agreement, Servlet API 2.4|Sun Binary Code License Agreement, Servlet API 2.5</licenseMerge>
+                  <licenseMerge>Common Development and Distribution License (CDDL) v1.0|Common Development and Distribution License, Version 1.0|CDDL 1.0|COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0</licenseMerge>
+                  <licenseMerge>ICU4J License|ICU License|ICU4J license</licenseMerge>
+                  <licenseMerge>Eclipse Public License, Version 1.0|Eclipse Public License - v 1.0|Eclipse Public License - Version 1.0|Eclipse Public License, v1.0</licenseMerge>
+                </licenseMerges>
+
+                <!-- Group the 3rd party license report by license type -->
+                <groupByLicense>true</groupByLicense>
+
+                <!-- This by default is src/license/THIRD-PROPERTY.properties.  It is generated
+                  by transforming 'supplemental-models.xml' with 'supplemental-models-to-3rdparty.xsl',
+                  found in the org.dataconservancy:supplemental-resources project. -->
+                <useMissingFile>true</useMissingFile>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-remote-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>process-remote-resources</id>
+            <goals>
+              <goal>process</goal>
+            </goals>
+            <configuration>
+
+              <runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
+
+              <resourceBundles>
+                <resourceBundle>org.apache:apache-jar-resource-bundle:1.4</resourceBundle>
+              </resourceBundles>
+
+              <supplementalModelArtifacts>
+                <supplementalModelArtifact>org.dataconservancy:supplemental-resources:1.1.1-SNAPSHOT</supplementalModelArtifact>
+              </supplementalModelArtifacts>
+
+              <!-- Specify the path, relative to the JAR root, where the supplemental model file is located -->
+              <supplementalModels>
+                <supplementalModel>supplemental-models.xml</supplementalModel>
+              </supplementalModels>
+
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>site-aggregate</id>
+            <goals>
+              <goal>aggregate</goal>
+            </goals>
+            <phase>site</phase>
+            <configuration>
+              <show>protected</show>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+
+  </build>
+
+  <scm>
+    <connection>scm:svn:${svn.base}/release/dcs-frontend/trunk</connection>
+    <developerConnection>scm:svn:${svn.base}/release/dcs-frontend/trunk</developerConnection>
+    <url>https://scm.dataconservancy.org/svn/release/dcs-frontend/trunk</url>
+  </scm>
+
+
+</project>

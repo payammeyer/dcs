@@ -1,0 +1,1510 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <!-- 
+    $Id: pom.xml 9576 2015-05-19 18:50:49Z jrm $
+    $URL: https://scm.dataconservancy.org/svn/maven/project/trunk/pom.xml $
+  -->
+  
+  <!-- ======================================================== -->
+  <!-- Data Conservancy Project POM =========================== -->
+  <!-- ======================================================== -->
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.dataconservancy</groupId>
+  <artifactId>project-pom</artifactId>
+  <packaging>pom</packaging>
+  <name>Data Conservancy Project POM</name>
+  <description>Maven 3 project POM for the Data Conservancy</description>
+
+  <prerequisites>
+      <maven>3.1.1</maven>
+  </prerequisites>
+
+  <parent>
+    <groupId>org.dataconservancy</groupId>
+    <artifactId>parent-pom</artifactId>
+    <version>1.0.5-SNAPSHOT</version>
+  </parent>
+
+  <version>1.1.2-SNAPSHOT</version>
+    
+  <scm>
+    <connection>scm:svn:${svn.base}/maven/project/trunk</connection>
+    <developerConnection>scm:svn:${svn.base}/maven/project/trunk</developerConnection>
+    <url>https://scm.dataconservancy.org/svn/maven/project/trunk</url>
+  </scm>
+
+  <modules>
+   <module>supplemental-resources</module>
+  </modules>
+
+  <properties>
+
+    <!--
+      These properties allow us to easily maintain the same version for all components
+      of a specific platform or framework.  They should be used by child poms in lieu 
+      of hard-coding a version string.  E.g. use '<version>${dcs.project.spring.version}</version>' 
+      instead of using '<version>3.0.7_RELEASE</version>'
+
+      E.g. the MHF shouldn't use '<version>${project.parent.version}</version>' or
+      '<version>2.0.0-SNAPSHOT</version>' when depending on the dcs-registry.  It should
+      use '<version>(literal value of version)</version>'.
+    -->
+
+    <!-- 
+      External dependencies/components 
+    -->
+
+    <!-- Version of Apache Abdera in use -->
+    <dcs.project.abdera.version>1.1.2</dcs.project.abdera.version>
+    <!-- Version of the Spring Framework in use -->
+    <dcs.project.spring.version>3.1.4.RELEASE</dcs.project.spring.version>
+    <!-- Version of Apache Axiom in use --> 
+    <dcs.project.axiom.version>1.2.10</dcs.project.axiom.version>
+    <!-- Version of XStream in use -->
+    <dcs.project.xstream.version>1.4.7</dcs.project.xstream.version>
+    <!-- Version of XPP3 in use -->
+    <dcs.project.xpp3.version>1.1.4c</dcs.project.xpp3.version>
+    <!-- Version of Apache commons-io in use -->
+    <dcs.project.commonsio.version>2.4</dcs.project.commonsio.version>
+    <!-- Version of Apache commons-cli in use -->
+    <dcs.project.commonscmdline.version>1.2</dcs.project.commonscmdline.version>
+    <!-- Version of Apache commons-compress in use -->
+    <dcs.project.commonscompress.version>1.9</dcs.project.commonscompress.version>
+    <!-- Version of Apache commons-codec in use -->
+    <dcs.project.commonscodec.version>1.4</dcs.project.commonscodec.version>
+    <!-- Version of Apache commons-configuration in use -->
+    <dcs.project.commonsconfiguration.version>1.8</dcs.project.commonsconfiguration.version>
+    <!-- Version of Apache commons-pool in use -->
+    <dcs.project.commonspool.version>1.6</dcs.project.commonspool.version>
+    <!-- Version of Apache commons-collections in use -->
+    <dcs.project.commonscollections.version>3.2.1</dcs.project.commonscollections.version>
+    <!-- Version of Apache commons-dbcp in use -->
+    <dcs.project.commonsdbcp.version>1.4</dcs.project.commonsdbcp.version>
+    <!-- Version of Apache commons-fileupload in use -->
+    <dcs.project.commonsfileupload.version>1.2.2</dcs.project.commonsfileupload.version>
+    <!-- Version of SLF4J in use -->
+    <dcs.project.slf4j.version>1.7.10</dcs.project.slf4j.version>
+    <!-- Version of JUnit in use -->
+    <dcs.project.junit.version>4.9</dcs.project.junit.version>
+    <!-- Version of Apache HTTP Components in use -->
+    <dcs.project.httpcomponents.version>4.3.3</dcs.project.httpcomponents.version>
+    <!-- Version of Apache Tika in use -->
+    <dcs.project.tika.version>1.0</dcs.project.tika.version>
+    <!-- Version of Hibernate in use -->
+    <dcs.project.hibernate.version>4.1.7.Final</dcs.project.hibernate.version>
+    <!-- Version of DROID content detection in use -->
+    <dcs.project.droid.version>6.1.5</dcs.project.droid.version>
+    <!-- Version of Joda Time -->
+    <dcs.project.joda.version>2.0</dcs.project.joda.version>
+    <!-- Version of Joda JSP Tags -->
+    <dcs.project.jodajsp.version>1.1.1</dcs.project.jodajsp.version>
+    <!-- Version of Java JPA in use -->
+    <dcs.project.javaxpersistence.version>1.0</dcs.project.javaxpersistence.version>
+    <!-- Version of Java Assist in use -->
+    <dcs.project.javassist.version>3.18.2-GA</dcs.project.javassist.version>
+    <!-- Version of JDOM in use -->
+    <dcs.project.jdom.version>1.1</dcs.project.jdom.version>
+    <!-- Version of collections-generic in use -->
+    <dcs.project.collectionsgeneric.version>4.01</dcs.project.collectionsgeneric.version>
+    <!-- Version of the Drew Noakes Metadata Extractor in use -->
+    <dcs.project.noakes.version>2.6.2</dcs.project.noakes.version>
+    <!-- Version of Derby in use -->
+    <dcs.project.derby.version>10.8.2.2</dcs.project.derby.version>
+    <!-- Version of JSoup in use -->  
+    <dcs.project.jsoup.version>1.7.2</dcs.project.jsoup.version>
+    <!-- Version of Apache Velocity in use -->
+    <dcs.project.velocity.version>1.7</dcs.project.velocity.version>
+    <!-- Version of Stripes in use -->
+    <dcs.project.stripes.version>1.5.6</dcs.project.stripes.version>
+    <!-- Version of Tomcat JSP API -->
+    <dcs.project.tomcatjspapi.version>6.0.33</dcs.project.tomcatjspapi.version>
+    <!-- Version of JSTL in use -->
+    <dcs.project.jstl.version>1.2</dcs.project.jstl.version>
+    <!-- Version of Quartz -->
+    <dcs.project.quartz.version>2.2.1</dcs.project.quartz.version>
+    <!-- Version of cglib -->
+    <dcs.project.cglib.version>3.1</dcs.project.cglib.version>
+    <!-- Version of json-simple -->
+    <dcs.project.jsonsimple.version>1.1</dcs.project.jsonsimple.version>
+    <!-- Version of logback -->
+    <dcs.project.logback.version>1.1.2</dcs.project.logback.version>
+    <!-- Version of plexus-interactivity -->
+    <dcs.project.plexusinteractivity.version>1.0-alpha-6</dcs.project.plexusinteractivity.version>
+    <!-- Version of mockito in use -->
+    <dcs.project.mockito.version>1.10.19</dcs.project.mockito.version>
+    <!-- Version of aspectj in use -->
+    <dcs.project.aspectj.version>1.8.5</dcs.project.aspectj.version>
+    <!-- Version of libphonenumber in use -->
+    <dcs.project.libphonenumber.version>6.2</dcs.project.libphonenumber.version>
+    <!-- Version of javax servlet-api in use -->
+    <dcs.project.javaxservletapi>3.1.0</dcs.project.javaxservletapi>
+  </properties>
+
+
+  <!-- Build  ===================================================== -->
+  
+  <build>
+
+    <pluginManagement>     
+      <plugins>
+
+        <!-- dependency -->
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>1.4</version>
+            <configuration>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.1.1,)</version>
+                </requireMavenVersion>
+              </rules>
+            </configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <version>2.6.1</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-plugin</artifactId>
+          <version>1.9.2</version>
+        </plugin>
+
+
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-install-plugin</artifactId>
+              <version>2.5.2</version>
+          </plugin>
+
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.18.1</version>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.18.1</version>
+          <executions>
+            <!-- Each execution has an <id> so that child
+                 poms can modify the configuration of each
+                 phase -->
+            <execution>
+              <id>integration-test</id>
+              <goals>
+                <goal>integration-test</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>verify</id>
+              <goals>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.2</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.4</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.10.1</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.7</version>
+          <dependencies>
+            <dependency>
+                <groupId>org.apache.maven.shared</groupId>
+                <artifactId>maven-filtering</artifactId>
+                <version>1.3</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-remote-resources-plugin</artifactId>
+          <version>1.5</version>
+        </plugin>
+                
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.4</version>
+          <!-- See https://jira.codehaus.org/browse/WAGON-393 -->
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.wagon</groupId>
+              <artifactId>wagon-ssh</artifactId>
+              <version>2.5</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-report-plugin</artifactId>
+          <version>2.18.1</version>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>2.8</version>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
+    
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.5.3</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>2.3</version>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>3.4</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>8.1.16.v20140903</version>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-archetype-plugin</artifactId>
+          <version>2.2</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>1.8</version>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>2.8.2</version>
+            <configuration>
+                <retryFailedDeploymentCount>5</retryFailedDeploymentCount>
+            </configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.10</version>
+        </plugin>
+
+          <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>build-helper-maven-plugin</artifactId>
+              <version>1.9.1</version>
+          </plugin>
+        
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-java6</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[1.7.0,)</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>enforce-maven311</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>source-jar</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>javadoc-jar</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <encoding>UTF-8</encoding>          
+          <detectLinks>false</detectLinks>
+          <detectJavaApiLink>false</detectJavaApiLink>
+          <detectOfflineLinks>false</detectOfflineLinks>
+          <links>
+            <link>http://download.oracle.com/javase/6/docs/api/</link>  
+            <link>http://download.oracle.com/javaee/6/api/</link>
+            <link>http://maven.dataconservancy.org/sites/model/apidocs/</link>
+            <link>http://maven.dataconservancy.org/sites/access/apidocs/</link>
+            <link>http://maven.dataconservancy.org/sites/archive/apidocs/</link>
+            <link>http://static.springsource.org/spring/docs/3.0.x/javadoc-api/</link>              
+          </links>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-archetype-plugin</artifactId>
+        <configuration>
+          <archetypeCatalog>remote,http://maven.dataconservancy.org/public/snapshots,local</archetypeCatalog>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+
+  </build>
+
+
+  <!-- Dependency Management ====================================== -->
+  
+  <dependencyManagement>
+
+    <dependencies>
+      <!-- ======================================================== -->      
+      <!-- Exernal (non-DC) project dependencies ================== -->
+      <!-- ======================================================== -->
+
+      <!--
+        | Logging related dependencies (SLF4J, Log4J, etc.)
+        +-->
+
+      <!-- SLF4J -->
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${dcs.project.slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${dcs.project.slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>log4j-over-slf4j</artifactId>
+        <version>${dcs.project.slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>${dcs.project.slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${dcs.project.slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-nop</artifactId>
+        <version>${dcs.project.slf4j.version}</version>
+      </dependency>
+
+      <!-- Log4J -->
+
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.13</version>
+      </dependency>
+
+      <!-- Logback -->
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${dcs.project.logback.version}</version>
+      </dependency>
+
+      <!--
+        | Serialization/marshalling libraries (XStream, etc.)
+        +-->
+      
+      <!-- XStream -->
+      
+      <dependency>
+        <groupId>com.thoughtworks.xstream</groupId>
+        <artifactId>xstream</artifactId>
+        <version>${dcs.project.xstream.version}</version>        
+      </dependency>
+      
+      <dependency>
+        <groupId>org.jsoup</groupId>
+        <artifactId>jsoup</artifactId>
+        <version>${dcs.project.jsoup.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>xpp3</groupId>
+        <artifactId>xpp3_min</artifactId>
+        <version>${dcs.project.xpp3.version}</version>
+      </dependency>
+      
+
+      <!--
+        | Testing related dependencies (JUnit, Mockito, XMLUnit, etc.)
+        +-->
+
+      <!-- JUnit -->
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${dcs.project.junit.version}</version>
+      </dependency>
+
+      <!-- Mockito -->
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>${dcs.project.mockito.version}</version>
+      </dependency>
+
+      <!-- XMLUnit -->
+      
+      <dependency>
+        <groupId>xmlunit</groupId>
+        <artifactId>xmlunit</artifactId>
+        <version>1.3</version>
+      </dependency>
+            
+      <!--
+        | Joda Time
+        +-->
+
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>${dcs.project.joda.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time-jsptags</artifactId>
+        <version>${dcs.project.jodajsp.version}</version>
+      </dependency>
+
+      <!-- Default exclusions
+        Related to: https://wiki.library.jhu.edu/x/ygPh
+        Sorted by: groupId (alpha), then artifactId (alpha)
+        
+        Include the specific version you are excluding,
+        commented out as documentation.
+      -->
+
+
+      <!-- 
+        | Apache Abdera Dependencies
+        +-->
+
+      <dependency>
+        <groupId>org.apache.abdera</groupId>
+        <artifactId>abdera-core</artifactId>
+        <version>${dcs.project.abdera.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.abdera</groupId>
+        <artifactId>abdera-client</artifactId>
+        <version>${dcs.project.abdera.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.abdera</groupId>
+        <artifactId>abdera-parser</artifactId>
+        <version>${dcs.project.abdera.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.abdera</groupId>
+        <artifactId>abdera-server</artifactId>
+        <version>${dcs.project.abdera.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <!--version>2.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.abdera</groupId>
+        <artifactId>abdera-spring</artifactId>
+        <version>${dcs.project.abdera.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <!--version>2.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.abdera</groupId>
+        <artifactId>abdera-i18n</artifactId>
+        <version>${dcs.project.abdera.version}</version>
+      </dependency>
+
+      <!--
+        | Apache HTTPComponents (HTTPClient and friends)
+        +-->
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${dcs.project.httpcomponents.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+        <!-- same, with tests classifier -->
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <classifier>tests</classifier>
+        <version>${dcs.project.httpcomponents.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+       </exclusions>       
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>${dcs.project.httpcomponents.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpmime</artifactId>
+        <version>${dcs.project.httpcomponents.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!-- Legacy httpclient is used by dcs-access -->
+      <dependency>
+        <groupId>commons-httpclient</groupId>
+        <artifactId>commons-httpclient</artifactId>
+        <version>3.1</version>
+        <exclusions> 
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!--
+        | Apache Commons (commons-io, commons-pool, commons-dbcp, etc)
+        +-->
+
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${dcs.project.commonsio.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>commons-cli</groupId>
+        <artifactId>commons-cli</artifactId>
+        <version>${dcs.project.commonscmdline.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>${dcs.project.commonscompress.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>${dcs.project.commonscodec.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>commons-pool</groupId>
+        <artifactId>commons-pool</artifactId>
+        <version>${dcs.project.commonspool.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-configuration</groupId>
+        <artifactId>commons-configuration</artifactId>
+        <version>${dcs.project.commonsconfiguration.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-collections</groupId>
+        <artifactId>commons-collections</artifactId>
+        <version>${dcs.project.commonscollections.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>commons-dbcp</groupId>
+        <artifactId>commons-dbcp</artifactId>
+        <version>${dcs.project.commonsdbcp.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>commons-fileupload</groupId>
+        <artifactId>commons-fileupload</artifactId>
+        <version>${dcs.project.commonsfileupload.version}</version>
+      </dependency>
+      
+      
+      <!--
+        | Apache Tika
+        +-->
+
+      <dependency>
+        <groupId>org.apache.tika</groupId>
+        <artifactId>tika-parsers</artifactId>
+        <version>${dcs.project.tika.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>        
+      </dependency>
+      
+      <dependency>
+        <groupId>org.apache.tika</groupId>
+        <artifactId>tika-core</artifactId>
+        <version>${dcs.project.tika.version}</version>
+      </dependency>
+
+
+      <!--
+        | Apache Axiom
+        +-->
+
+      <dependency>
+        <groupId>org.apache.ws.commons.axiom</groupId>
+        <artifactId>axiom-impl</artifactId>
+        <version>${dcs.project.axiom.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.ws.commons.axiom</groupId>
+        <artifactId>axiom-api</artifactId>
+        <version>${dcs.project.axiom.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!--
+        | JBoss Hibernate
+        +-->
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-annotations</artifactId>
+        <version>${dcs.project.hibernate.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${dcs.project.hibernate.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <!--version>1.6.1</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+      
+      <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>persistence-api</artifactId>
+        <version>${dcs.project.javaxpersistence.version}</version>
+      </dependency>
+      
+      <!--
+        | Postgres
+        +-->
+      
+      <dependency>
+        <groupId>postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>9.0-801.jdbc4</version>
+      </dependency>
+      
+      <!--
+        | Derby
+        +-->
+      
+      <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derby</artifactId>
+        <version>${dcs.project.derby.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.apache.derby</groupId>
+        <artifactId>derbyclient</artifactId>
+        <version>${dcs.project.derby.version}</version>
+      </dependency>
+      
+      
+            
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>${dcs.project.javassist.version}</version>
+      </dependency>
+
+      <!--
+        | Spring Framework
+        +-->
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${dcs.project.spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.1</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${dcs.project.spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.1</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${dcs.project.spring.version}</version>
+      </dependency>
+     
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${dcs.project.spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.1</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${dcs.project.spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>${dcs.project.spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${dcs.project.spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+        <version>${dcs.project.spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-orm</artifactId>
+        <version>${dcs.project.spring.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jdbc</artifactId>
+        <version>${dcs.project.spring.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aop</artifactId>
+        <version>${dcs.project.spring.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-expression</artifactId>
+        <version>${dcs.project.spring.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>${dcs.project.spring.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${dcs.project.spring.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${dcs.project.spring.version}</version>
+      </dependency>
+
+      <!--
+        | Java Servlet API
+        +-->
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>${dcs.project.javaxservletapi}</version>
+      </dependency>
+
+      <!--
+        | DROID content detection utility
+        +-->
+
+      <dependency>
+        <groupId>uk.gov.nationalarchives</groupId>
+        <artifactId>droid-core-interfaces</artifactId>
+        <version>${dcs.project.droid.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>uk.gov.nationalarchives</groupId>
+        <artifactId>droid-core</artifactId>
+        <version>${dcs.project.droid.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>uk.gov.nationalarchives</groupId>
+        <artifactId>droid-container</artifactId>
+        <version>${dcs.project.droid.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>uk.gov.nationalarchives</groupId>
+        <artifactId>droid-command-line</artifactId>
+        <version>${dcs.project.droid.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>uk.gov.nationalarchives</groupId>
+            <artifactId>droid-results</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      
+      <!--
+        | UI technologies
+        +-->
+      
+      <dependency>
+        <groupId>org.apache.velocity</groupId>
+        <artifactId>velocity</artifactId>
+        <version>${dcs.project.velocity.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>logkit</groupId>
+            <artifactId>logkit</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      
+      <dependency>
+        <groupId>net.sourceforge.stripes</groupId>
+        <artifactId>stripes</artifactId>
+        <version>${dcs.project.stripes.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>      
+      
+      <dependency>
+        <groupId>jstl</groupId>
+        <artifactId>jstl</artifactId>
+        <version>${dcs.project.jstl.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>jsp-api</artifactId>
+        <version>${dcs.project.tomcatjspapi.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>com.googlecode.json-simple</groupId>
+        <artifactId>json-simple</artifactId>
+        <version>${dcs.project.jsonsimple.version}</version>
+      </dependency>
+      
+      
+
+      <!-- 
+        | Random/misc
+        +-->
+
+
+      <!-- 
+        com.yourmediashelf.fedora.client:fedora-client:0.1.2 
+        uses version ranges for Jena and xmlsec dependencies.
+        This causes problems between m2 and m3 builds.  The
+        following two dependency defintions peg the versions
+        used by fedora-client
+      -->
+      <dependency>
+        <groupId>com.hp.hpl.jena</groupId>
+        <artifactId>jena</artifactId>
+        <version>2.6.4</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <!--version>1.5.6</version-->
+          </exclusion>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <!--version>1.2.13</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.apache.jena</groupId>
+        <artifactId>jena-core</artifactId>
+        <version>2.11.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.jena</groupId>
+        <artifactId>apache-jena-libs</artifactId>
+        <version>2.10.1</version>
+        <type>pom</type>
+        <exclusions>
+            <exclusion>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+            </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.santuario</groupId>
+        <artifactId>xmlsec</artifactId>
+        <version>1.4.3</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <!--version>1.0.4</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.openrdf</groupId>
+        <artifactId>rio</artifactId>
+        <version>1.0.10</version>
+      </dependency>
+
+      <dependency>
+        <groupId>displaytag</groupId>
+        <artifactId>displaytag</artifactId>
+        <version>1.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl104-over-slf4j</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.yourmediashelf.fedora.client</groupId>
+        <artifactId>fedora-client</artifactId>
+        <version>0.7</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <!--version>5.3.2</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>eu.medsea.mimeutil</groupId>
+        <artifactId>mime-util</artifactId>
+        <version>2.1.3</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <!--version>1.5.6</version-->
+          </exclusion>
+          <exclusion>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <!--version>1.2.14</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-core</artifactId>
+        <version>[5.3.2,)</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging-api</artifactId>
+            <!--version>1.1</version-->
+          </exclusion>
+        </exclusions>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.jdom</groupId>
+        <artifactId>jdom</artifactId>
+        <version>${dcs.project.jdom.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>net.sourceforge.collections</groupId>
+        <artifactId>collections-generic</artifactId>
+        <version>${dcs.project.collectionsgeneric.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>com.drewnoakes</groupId>
+        <artifactId>metadata-extractor</artifactId>
+        <version>${dcs.project.noakes.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.quartz-scheduler</groupId>
+        <artifactId>quartz</artifactId>
+        <version>${dcs.project.quartz.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>cglib</groupId>
+        <artifactId>cglib-nodep</artifactId>
+        <version>${dcs.project.cglib.version}</version>
+      </dependency>          
+
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-interactivity-api</artifactId>
+        <version>${dcs.project.plexusinteractivity.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjrt</artifactId>
+        <version>${dcs.project.aspectj.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>${dcs.project.aspectj.version}</version>
+      </dependency>
+
+        <!-- libphonenumber-->
+
+      <dependency>
+        <groupId>com.googlecode.libphonenumber</groupId>
+        <artifactId>libphonenumber</artifactId>
+        <version>${dcs.project.libphonenumber.version}</version>
+      </dependency>
+
+    </dependencies>
+
+  </dependencyManagement>
+
+
+  <!-- Reporting  ================================================= -->
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.8</version>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+      </plugin>
+    </plugins>
+  </reporting>
+  
+  
+  <!-- CI Management  ============================================= -->
+  
+  <ciManagement>
+    <system>Bamboo</system>
+    <url>http://bamboo.mse.jhu.edu/browse/DC</url>
+  </ciManagement>
+  
+  
+  <!-- Issue Management  ========================================== -->
+  
+  <issueManagement>
+    <system>JIRA</system>
+    <url>https://scm.dataconservancy.org/issues/browse/DC</url>
+  </issueManagement>
+  
+  
+  <!-- Mailing Lists  ============================================= -->
+  
+  <mailingLists>
+    <mailingList>
+      <name>Data Conservancy IRD Team</name>
+      <post>dc-ird@googlegroups.com</post>
+      <unsubscribe>dc-ird+unsubscribe@googlegroups.com</unsubscribe>
+      <archive>http://groups.google.com/group/dc-ird/topics</archive>
+    </mailingList>
+    
+    <mailingList>
+      <name>Data Conservancy Code Watch</name>
+      <post>data-conservancy-commits@googlegroups.com</post>
+      <unsubscribe>data-conservancy-commits+unsubscribe@googlegroups.com</unsubscribe>
+      <archive>http://groups.google.com/group/data-conservancy-commits/topics</archive>
+    </mailingList>
+    
+    <mailingList>
+      <name>Data Conservancy Build Watch</name>
+      <post>data-conservancy-builds@googlegroups.com</post>
+      <unsubscribe>data-conservancy-builds+unsubscribe@googlegroups.com</unsubscribe>
+      <archive>http://groups.google.com/group/data-conservancy-builds/topics</archive>
+    </mailingList>
+  </mailingLists>
+
+</project>

@@ -1,0 +1,8 @@
+target/
+.svn/
+.idea/
+*.iml
+*.iws
+*.ipr
+*.xpr
+atlassian-ide-plugin.xml

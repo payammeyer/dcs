@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2014 Johns Hopkins University
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project name="dcs-package-tool-release">
+
+  <!--
+    The base url of the remote production SVN repository.
+    - e.g. https://scm.dataconservancy.org/svn
+  -->
+  <property name="svn.remote.repo.url" value="https://scm.dataconservancy.org/svn"/>
+
+  <!--
+    The SVN revision number we will base the release off of.  This property needs to be updated, or supplied on the
+    command-line, with the Subversion revision to be released.
+
+    Typically running 'svn info https://scm.dataconservancy.org/svn' will give you the value you need.
+
+    Must be set on the command line, using -Dsvn.release.rev=8034
+  -->
+  <property name="svn.release.rev" value=""/>
+  
+  <!--
+    The tag that is created for each module that is released.  If the value is "mytag", then
+    the Release Plugin will create a /<module>/tags/mytag directory in Subversion for
+    each parent module that is released.
+  -->
+  <property name="svn.release.tag" value="0.9.0-beta"/>
+
+  <!--
+    The path to the local, file system based, SVN repository (that absorbs the throw-away cruft from the Maven release
+    plugin)
+  -->
+  <property name="svn.local.repo.location" value="${basedir}/target/svn-fs-repo"/>
+
+  <!--
+    The base url of the local, file system based, SVN repository.
+  -->
+  <property name="svn.local.repo.url" value="file://${svn.local.repo.location}"/>
+
+  <!--
+    The prefix used by git when referencing cloned Subversion branches
+  -->
+  <property name="git.svn.prefix" value="svn/"/>
+
+  <!--
+    The tag used by git to mark the state of a "clean" (unmodified) clone of the
+    Subversion repository
+  -->
+  <property name="git.clean.tag" value="clean-r${svn.release.rev}"/>
+
+  <!--
+    The path to the git clone of the production SVN repository
+    (used to push commits to the production Subversion repository) when the release
+    process completes.
+  -->
+  <property name="git.repo.location" value="${basedir}/target/git-shallow-clone-r${svn.release.rev}"/>
+
+  <!--
+    The path to the local Maven repository used to stage a release.
+  -->
+  <property name="maven.local.repo.stage.location" value="${basedir}/target/maven-stage-repo"/>
+
+  <!--
+    The URL of the local Maven repository used to stage a release.
+    -->
+  <property name="maven.local.repo.stage.url" value="file://${maven.local.repo.stage.location}"/>
+
+  <!--
+    Property name prefix, used to reference properties from the shell environment.
+    - e.g.: ${ENV.M2_HOME}
+  -->
+  <property environment="ENV"/>
+
+  <!--
+   The version of the Maven Release plugin being used to perform the release.  Note that JHU has released its
+   own version (under the org.dataconservancy.maven group id) of the Release plugin used in this process.
+  -->
+  <property name="release.plugin.version" value="2.5-SNAPSHOT"/>
+  
+  <property name="dc.parent.pom.release.version" value="1.0.3"/>
+  
+  <property name="dc.parent.pom.dev.version" value="1.0.4-SNAPSHOT"/>
+  
+  <property name="dc.project.pom.release.version" value="1.1.0-beta"/>
+  
+  <property name="dc.project.pom.dev.version" value="1.1.1-SNAPSHOT"/>
+  
+  <property name="dc.default.release.version" value="0.9.0-beta"/>
+  
+  <property name="dc.default.dev.version" value="0.9.1-SNAPSHOT"/>
+
+  <!-- See http://svnkit.com/kb/user-guide-svnant.html -->
+  <!-- svn co http://subclipse.tigris.org/svn/subclipse/tags/svnant/1.0.0 svnant-1.1.0 -->
+  <!-- cd svnant-1.1.0 ; ant makeDistrib -->
+  <!-- cp build/distrib/lib/*.jar /usr/local/ant/lib -->
+  <typedef resource="org/tigris/subversion/svnant/svnantlib.xml"/>
+
+  <!--
+    | Git-related macro definitions
+    | - see http://ant.apache.org/manual/Tasks/macrodef.html
+    +-->
+
+  <macrodef name="git" description="executes arbitrary git commands using the command line">
+    <attribute name="command"/>
+    <attribute name="dir" default="${basedir}"/>
+    <element name="args" optional="true"/>
+    <sequential>
+      <echo message="git @{command} @{args}"/>
+      <exec executable="git" dir="@{dir}">
+        <arg value="@{command}"/>
+        <args/>
+      </exec>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="git-svn-clone"
+    description="executes a shallow clone (limited history) of a subversion repo">
+    <attribute name="repository"/>
+    <attribute name="dest"/>
+    <attribute name="rev"/>
+    <attribute name="prefix"/>
+    <sequential>
+      <git command="svn">
+        <args>
+          <arg value="clone"/>
+          <arg value="--prefix=@{prefix}"/>
+          <arg value="--ignore-paths"/>
+          <!-- judicious use of ignore-paths to avoid a large clone, and subsequent svn add -->
+          <arg
+            value="(?:branches|ivoa-services|sakai-dcs|1.1.0-alpha|1.0.1-y2pilot|1.0.3-y2pilot|1.0.0|1.0.2-y2pilot|process-orchestration|dcs-lite|archive-provider|commit-sandbox|dcs-datapub-authsub|dcs-entity-graph|dcs-eventing|dcs-mapping|dcs-persistence|dcs-serialization|dcs-typedef|/storage|vendor)"/>
+          <arg value="-r@{rev}"/>
+          <arg value="@{repository}"/>
+          <arg value="@{dest}"/>
+        </args>
+      </git>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="git-tag" description="Creates a tag in the git repository for HEAD">
+    <attribute name="repository"/>
+    <attribute name="tag"/>
+    <sequential>
+      <git command="tag" dir="@{repository}">
+        <args>
+          <arg value="@{tag}"/>
+        </args>
+      </git>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="git-reset-hard"
+    description="Resets the Git repository and index to the supplied revision (!!! Looses commits !!!)">
+    <attribute name="repository"/>
+    <attribute name="rev"/>
+    <sequential>
+      <git command="reset" dir="@{repository}">
+        <args>
+          <arg value="--hard"/>
+          <arg value="@{rev}"/>
+        </args>
+      </git>
+    </sequential>
+  </macrodef>
+
+  <!--
+    | Maven Macro-def
+    +-->
+  <macrodef name="maven">
+    <attribute name="options" default=""/>
+    <attribute name="goal"/>
+    <attribute name="basedir"/>
+    <attribute name="resultproperty" default="maven.result"/>
+    <element name="args" implicit="true" optional="true"/>
+    <sequential>
+      <java classname="org.codehaus.classworlds.Launcher" fork="true" dir="@{basedir}">
+        <jvmarg value="-Xmx1024m"/>
+        <jvmarg value="-XX:MaxPermSize=256m"/>
+        <classpath>
+          <fileset dir="${ENV.M2_HOME}/boot">
+            <include name="*.jar"/>
+          </fileset>
+          <fileset dir="${ENV.M2_HOME}/lib">
+            <include name="*.jar"/>
+          </fileset>
+        </classpath>
+        <sysproperty key="classworlds.conf" value="${ENV.M2_HOME}/bin/m2.conf"/>
+        <sysproperty key="maven.home" value="${ENV.M2_HOME}"/>
+        <arg line="@{options} @{goal}"/>
+      </java>
+    </sequential>
+  </macrodef>
+
+  <!--
+    Performs a shallow git clone of a SVN repository
+  -->
+  <target name="git-svn-clone-shallow">
+    <git-svn-clone repository="${svn.remote.repo.url}" rev="${svn.release.rev}" prefix="${git.svn.prefix}"
+      dest="${git.repo.location}"/>
+    <git-tag repository="${git.repo.location}" tag="${git.clean.tag}"/>
+  </target>
+
+  <!--
+    Resets the git repository to its initial state after the svn clone. (WARNING !!! Looses all commits !!!)
+  -->
+  <target name="reset-git-repo">
+    <git-reset-hard repository="${git.repo.location}" rev="${git.clean.tag}"/>
+  </target>
+
+  <!--
+    Creates a new, empty, SVN repository
+  -->
+  <target name="svnadmin-create-fs-repo">
+    <svn svnkit="false" javahl="false">
+      <createRepository path="${svn.local.repo.location}"/>
+    </svn>
+  </target>
+
+  <!--
+    Performs an SVN cleanup
+  -->
+  <target name="cleanup-svn-co">
+    <svn svnkit="false" javahl="false">
+      <cleanup dir="${git.repo.location}"/>
+    </svn>
+  </target>
+
+  <!--
+    Performs an SVN revert
+  -->
+  <target name="revert-svn-co">
+    <svn svnkit="false" javahl="false">
+      <revert dir="${git.repo.location}" recurse="true"/>
+    </svn>
+  </target>
+
+  <!--
+    Performs an SVN status
+  -->
+  <target name="status-svn-co">
+    <svn svnkit="false" javahl="false">
+      <status path="${git.repo.location}"/>
+    </svn>
+  </target>
+
+  <!--
+    Checks out the empty SVN repository into the shallow git clone
+  -->
+  <target name="checkout-svn-into-git">
+    <svn svnkit="false" javahl="false">
+      <checkout url="${svn.local.repo.url}" destPath="${git.repo.location}"/>
+    </svn>
+  </target>
+
+  <!--
+    Adds the files in the shallow git clone for commit into the empty SVN repo
+  -->
+  <target name="add-git-files-to-svn">
+    <svn svnkit="false" javahl="false">
+      <add>
+        <fileset dir="${git.repo.location}" includes="**/*"
+          excludes="**/.git, **/.svn, sakai-dcs/, **/branches/*, **/tags/*, **/target, **/.gitignore"/>
+        <dirset dir="${git.repo.location}" includes="**/*"
+          excludes="**/.git, **/.svn, sakai-dcs/, **/branches/*, **/tags/*, **/target/*, **/.gitignore"/>
+      </add>
+
+    </svn>
+  </target>
+
+  <!--
+    Commits scheduled files to SVN
+  -->
+  <target name="commit-to-svn">
+    <svn svnkit="false" javahl="false">
+      <commit dir="${git.repo.location}"
+        message="Initial commit of shallow clone from ${svn.base} ${svn.rev}"/>
+    </svn>
+  </target>
+
+  <!--
+    Rolls back the git repository to the original version (WARNING!!! *** looses all commits! ***)
+  -->
+  <target name="rollback-git">
+    <git-reset-hard repository="${git.repo.location}" rev="${git.clean.tag}"/>
+  </target>
+
+  <target name="mvn-release-cleanup"
+    description="Cleans up any release cruft left by the Maven Release Plugin (release.properties, backup POMs, target/ directories)">
+    <maven basedir="${git.repo.location}/release//trunk"
+      goal="-Paggregate_release,external exec:exec -Dexec.executable=mvn
+      -Dexec.args='
+      -Pexternal 
+      release:clean 
+      clean       
+      -Dsvn.base=${svn.local.repo.url}
+      -DstagingRepository=local::default::${maven.local.repo.stage.url}
+      -DaltDeploymentRepository=local::default::${maven.local.repo.stage.url}
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -Dmaven.repo.local=${maven.local.repo.stage.location}'"
+      resultproperty="maven.build.result"/>
+  </target>
+
+  <!--
+    | Targets that insure the required properties, executables, and dependencies are available
+    +-->
+
+  <target name="props-available">
+    <condition property="props-available">
+      <and>
+        <isset property="svn.remote.repo.url"
+          description="The base URL of the remote SVN repository being cloned by git.  Typically 'https://scm.dataconservancy.org/svn'"/>
+        <isset property="svn.release.rev"
+          description="The revision of the remote SVN repository being cloned by git.  The value must be set by the developer, normally the latest revision of the SVN repository"/>
+        <isset property="svn.release.tag"
+          description="The tag that is created by the Maven Release plugin for each parent module that is released."/>
+        <isset property="git.svn.prefix"
+          description="The prefix used by git for the remote SVN branches"/>
+        <isset property="git.clean.tag"
+          description="The tag used by git to mark a fresh clone of the remote SVN repository"/>
+        <isset property="git.repo.location"
+          description="The local filesystem path for the git repository."/>
+        <isset property="svn.local.repo.location"
+          description="The local filesystem path for the temporary filesystem-based SVN repository"/>
+        <isset property="svn.local.repo.url"
+          description="The URL to the local temporary filesystem-based SVN repository"/>
+        <isset property="maven.local.repo.stage.location"
+          description="The local filesystem path for the staging Maven repository"/>
+        <isset property="maven.local.repo.stage.url"
+          description="The url form of the local filesystem path for the staging Maven repository"/>
+        <not>
+          <equals arg1="" arg2="${svn.release.rev}"/>
+        </not>
+      </and>
+    </condition>
+  </target>
+
+  <target name="svnkit-available">
+    <condition property="svnkit-available">
+      <available classname="org.tmatesoft.svn.core.SVNNodeKind"/>
+    </condition>
+  </target>
+
+  <target name="svn-ant-tasks-available">
+    <condition property="svn-ant-tasks-available">
+      <available classname="org.tigris.subversion.svnant.SvnTask"/>
+    </condition>
+  </target>
+
+  <target name="git-exec-available">
+    <exec executable="git" failifexecutionfails="false" failonerror="false" resultproperty="git.rc">
+      <arg value="--version"/>
+    </exec>
+
+    <condition property="git-exec-available">
+      <and>
+        <isset property="git.rc"/>
+        <equals arg1="0" arg2="${git.rc}"/>
+      </and>
+    </condition>
+  </target>
+
+  <target name="mvn-exec-available">
+    <exec executable="mvn" failifexecutionfails="false" failonerror="false" resultproperty="mvn.rc">
+      <arg value="--version"/>
+    </exec>
+
+    <condition property="mvn-exec-available">
+      <and>
+        <isset property="mvn.rc"/>
+        <equals arg1="0" arg2="${mvn.rc}"/>
+      </and>
+    </condition>
+  </target>
+
+  <!--
+    Insures all dependencies are available, and required properties are set
+  -->
+  <target name="check-dependencies"
+    depends="props-available, svnkit-available, svn-ant-tasks-available, git-exec-available, mvn-exec-available">
+
+    <fail message="Necessary build properties are missing">
+      <condition>
+        <not>
+          <isset property="props-available"/>
+        </not>
+      </condition>
+    </fail>
+
+    <fail message="SVNKit is missing from the classpath">
+      <condition>
+        <not>
+          <isset property="svnkit-available"/>
+        </not>
+      </condition>
+    </fail>
+
+    <fail message="svnant tasks are missing from the classpath">
+      <condition>
+        <not>
+          <isset property="svn-ant-tasks-available"/>
+        </not>
+      </condition>
+    </fail>
+
+    <fail message="git executable is missing from the command path or is not installed">
+      <condition>
+        <not>
+          <isset property="git-exec-available"/>
+        </not>
+      </condition>
+    </fail>
+
+    <fail message="mvn executable is missing from the command path or is not installed">
+      <condition>
+        <not>
+          <isset property="mvn-exec-available"/>
+        </not>
+      </condition>
+    </fail>
+
+  </target>
+
+  <!--
+    Determines if the Git repository exists
+  -->
+  <target name="check-git-repository">
+    <fail
+      message="missing the local git repository at ${git.repo.location} (was the 'initialize-repositories' target run?)">
+      <condition>
+        <not>
+          <resourceexists>
+            <file file="${git.repo.location}"/>
+          </resourceexists>
+        </not>
+      </condition>
+    </fail>    
+  </target>
+
+  <!--
+    Determines if the local SVN repository exists
+  -->
+  <target name="check-svn-repository">
+    <fail
+      message="missing the local svn repository at ${svn.local.repo.location} (was the 'initialize-repositories' target run?)">
+      <condition>
+        <not>
+          <resourceexists>
+            <file file="${svn.local.repo.location}"/>
+          </resourceexists>
+        </not>
+      </condition>
+    </fail>    
+  </target>
+
+  <!--
+    Determines if the 'initialize-repositories' target has run
+  -->
+  <target name="check-repositories" depends="check-git-repository, check-svn-repository">
+    <mkdir dir="${maven.local.repo.stage.location}"/>
+  </target>
+
+  <!--
+    Initializes the git repository for a release
+  -->
+  <target name="init-git-repo" depends="check-dependencies, git-svn-clone-shallow"/>
+
+  <!--
+    Initializes the local svn repository for a release
+  -->
+  <target name="init-local-svn-repo"
+          depends="check-dependencies, check-git-repository, svnadmin-create-fs-repo, checkout-svn-into-git, add-git-files-to-svn, commit-to-svn"/>
+
+  <!--
+    | Main targets
+    +-->
+
+  <target name="initialize-repositories"
+    description="Initializes git and svn repositories for a release"
+    depends="init-git-repo, init-local-svn-repo"/>
+
+  <target name="stage-dcs-release" description="Perform a stage release of the DCS"
+    depends="check-dependencies, check-repositories">
+
+    <maven basedir="${git.repo.location}/release/dcs-package-tool/trunk"
+      options="-e"
+      goal="-Paggregate_release,external org.codehaus.mojo:exec-maven-plugin:1.2.1:exec -Dexec.executable=mvn     
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -DaltDeploymentRepository=local::default::${maven.local.repo.stage.url}
+      -Dmaven.repo.local=${maven.local.repo.stage.location}
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -Dexec.args='
+        -Pexternal
+        -e
+        org.dataconservancy.maven.plugins:maven-release-plugin:${release.plugin.version}:prepare         
+        org.dataconservancy.maven.plugins:maven-release-plugin:${release.plugin.version}:stage        
+        -Dtag=${svn.release.tag} -DreleaseVersion=${dc.default.release.version} -DdevelopmentVersion=${dc.default.dev.version}
+        -DenhancedInteractive=true
+        -Dgoals=deploy
+        -DcompletionGoals=&#34;clean install deploy&#34;
+        -DautoVersionSubmodules=true 
+        -Dsvn.base=${svn.local.repo.url}
+        -DstagingRepository=local::default::${maven.local.repo.stage.url}
+        -DaltDeploymentRepository=local::default::${maven.local.repo.stage.url}
+        -DlocalRepoDirectory=${maven.local.repo.stage.location}
+        -Dmaven.repo.local=${maven.local.repo.stage.location}
+        -DskipTests'"
+      resultproperty="maven.build.result"/>
+
+  </target>
+  
+  <target name="resume-stage-dcs-release" description="Resume a stage release of the DCS (must specify -Drelease.resumefrom=groupId:artifactId)"
+          depends="check-dependencies, check-repositories">
+    
+    <fail message="Must specify a module to resume from (e.g. -Drelease.resumefrom=org.dataconservancy.query:query-pom)">
+      <condition>
+        <not>
+          <isset property="release.resumefrom"/>
+        </not>
+      </condition>
+    </fail>
+      
+    <maven basedir="${git.repo.location}/release/dcs-package-tool/trunk"
+      options="-rf ${release.resumefrom} -e"
+      goal="-Paggregate_release,external org.codehaus.mojo:exec-maven-plugin:1.2.1:exec -Dexec.executable=mvn  
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -DaltDeploymentRepository=local::default::${maven.local.repo.stage.url}
+      -Dmaven.repo.local=${maven.local.repo.stage.location}
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -Dexec.args='
+      -Pexternal
+      -e
+      org.dataconservancy.maven.plugins:maven-release-plugin:${release.plugin.version}:prepare         
+      org.dataconservancy.maven.plugins:maven-release-plugin:${release.plugin.version}:stage        
+      -Dtag=${svn.release.tag} -DreleaseVersion=1.2.0-stage -DdevelopmentVersion=1.3.0-SNAPSHOT
+      -Dproject.rel.org.dataconservancy\:parent-pom=${dc.parent.pom.release.version} -Dproject.dev.org.dataconservancy\:parent-pom=${dc.parent.pom.dev.version}
+      -Dproject.rel.org.dataconservancy\:project-pom=${dc.project.pom.release.version} -Dproject.dev.org.dataconservancy\:project-pom=${dc.project.pom.dev.version}
+      -DenhancedInteractive=true
+      -Dgoals=deploy
+      -DcompletionGoals=&#34;clean install deploy&#34;
+      -DautoVersionSubmodules=true 
+      -Dsvn.base=${svn.local.repo.url}
+      -DstagingRepository=local::default::${maven.local.repo.stage.url}
+      -DaltDeploymentRepository=local::default::${maven.local.repo.stage.url}
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -Dmaven.repo.local=${maven.local.repo.stage.location}
+      -DskipTests'"
+      resultproperty="maven.build.result"/>
+         
+  </target>
+  
+  <target name="single-module-stage-dcs-release" description="Stage a release a single module (must specify -Drelease.module=groupId:artifactId)"
+          depends="check-dependencies, check-repositories">
+    
+    <fail message="Must specify a module to release (e.g. -Drelease.module=org.dataconservancy.query:query-pom)">
+      <condition>
+        <not>
+          <isset property="release.module"/>
+        </not>
+      </condition>
+    </fail>
+    
+    <maven basedir="${git.repo.location}/release/dcs-package-tool/trunk"
+      options="-pl ${release.module} -e"
+      goal="-Paggregate_release,external org.codehaus.mojo:exec-maven-plugin:1.2.1:exec -Dexec.executable=mvn     
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -DaltDeploymentRepository=local::default::${maven.local.repo.stage.url}
+      -Dmaven.repo.local=${maven.local.repo.stage.location}
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -Dexec.args='
+      -Pexternal
+      -e
+      org.dataconservancy.maven.plugins:maven-release-plugin:${release.plugin.version}:prepare         
+      org.dataconservancy.maven.plugins:maven-release-plugin:${release.plugin.version}:stage        
+      -Dtag=${svn.release.tag} -DreleaseVersion=1.2.0-stage -DdevelopmentVersion=1.3.0-SNAPSHOT
+      -Dproject.rel.org.dataconservancy\:parent-pom=${dc.parent.pom.release.version} -Dproject.dev.org.dataconservancy\:parent-pom=${dc.parent.pom.dev.version}
+      -Dproject.rel.org.dataconservancy\:project-pom=${dc.project.pom.release.version} -Dproject.dev.org.dataconservancy\:project-pom=${dc.project.pom.dev.version}
+      -DenhancedInteractive=true
+      -Dgoals=deploy
+      -DcompletionGoals=&#34;clean install deploy&#34;
+      -DautoVersionSubmodules=true 
+      -Dsvn.base=${svn.local.repo.url}
+      -DstagingRepository=local::default::${maven.local.repo.stage.url}
+      -DaltDeploymentRepository=local::default::${maven.local.repo.stage.url}
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -Dmaven.repo.local=${maven.local.repo.stage.location}
+      -DskipTests'"
+      resultproperty="maven.build.result"/>
+    
+  </target>
+  
+    <target name="perform-dcs-release" description="Perform dcs release, must be staged first">
+    <maven basedir="${git.repo.location}/release/dcs-package-tool/trunk"
+      options="-e"
+      goal="-Paggregate_release,external org.codehaus.mojo:exec-maven-plugin:1.2.1:exec -Dexec.executable=mvn     
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -DaltDeploymentRepository=local::default::${maven.local.repo.stage.url}
+      -Dmaven.repo.local=${maven.local.repo.stage.location}
+      -DlocalRepoDirectory=${maven.local.repo.stage.location}
+      -Dexec.args='
+        -Pexternal
+        -e
+        org.dataconservancy.maven.plugins:maven-release-plugin:${release.plugin.version}:perform
+        -Dtag=${svn.release.tag} -DreleaseVersion=${dc.default.release.version} -DdevelopmentVersion=${dc.default.dev.version}
+        -Dproject.rel.org.dataconservancy:parent-pom=${dc.parent.pom.release.version} -Dproject.dev.org.dataconservancy:parent-pom=${dc.parent.pom.dev.version}
+        -Dproject.rel.org.dataconservancy:project-pom=${dc.project.pom.release.version} -Dproject.dev.org.dataconservancy:project-pom=${dc.project.pom.dev.version}
+        -DenhancedInteractive=true
+        -Dgoals=deploy
+        -DautoVersionSubmodules=true 
+        -Dsvn.base=${svn.local.repo.url}
+        -DstagingRepository=local::default::${maven.local.repo.stage.url}
+        -DaltDeploymentRepository=local::default::${maven.local.repo.stage.url}
+        -DlocalRepoDirectory=${maven.local.repo.stage.location}
+        -Dmaven.repo.local=${maven.local.repo.stage.location}
+        -DskipTests'"
+      resultproperty="maven.build.result"/>
+
+  </target>
+
+</project>
