@@ -161,9 +161,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:${svn.base}/release/dcs-frontend/trunk</connection>
-    <developerConnection>scm:svn:${svn.base}/release/dcs-frontend/trunk</developerConnection>
-    <url>https://scm.dataconservancy.org/svn/release/dcs-frontend/trunk</url>
+    <connection>scm:git:https://github.com/DataConservancy/dcs.git</connection>
+    <developerConnection>scm:git:https://github.com/DataConservancy/dcs.git</developerConnection>
+    <url>https://github.com/DataConservancy/dcs</url>
   </scm>
 
 

@@ -166,9 +166,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:${svn.base}/release/dcs-packaging-tool/trunk</connection>
-    <developerConnection>scm:svn:${svn.base}/release/dcs-packaging-tool/trunk</developerConnection>
-    <url>https://scm.dataconservancy.org/svn/release/dcs-packaging-tool/trunk</url>
+    <connection>scm:git:https://github.com/DataConservancy/dcs.git</connection>
+    <developerConnection>scm:git:https://github.com/DataConservancy/dcs.git</developerConnection>
+    <url>https://github.com/DataConservancy/dcs/tree/master/dcs-packaging-tool</url>
   </scm>
 
 </project>

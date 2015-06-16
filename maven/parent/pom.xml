@@ -56,9 +56,9 @@
   <!-- Repositories and Distribution ======================================= -->
 
   <scm>
-    <connection>scm:svn:${svn.base}/maven/parent/trunk</connection>
-    <developerConnection>scm:svn:${svn.base}/maven/parent/trunk</developerConnection>
-    <url>https://scm.dataconservancy.org/svn/maven/parent/trunk</url>
+    <connection>scm:git:https://github.com/DataConservancy/dcs.git</connection>
+    <developerConnection>scm:git:https://github.com/DataConservancy/dcs.git</developerConnection>
+    <url>https://github.com/DataConservancy/dcs/maven/parent</url>
   </scm>
 
   <repositories>

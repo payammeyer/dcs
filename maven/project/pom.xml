@@ -29,9 +29,9 @@
   <version>1.1.2-SNAPSHOT</version>
     
   <scm>
-    <connection>scm:svn:${svn.base}/maven/project/trunk</connection>
-    <developerConnection>scm:svn:${svn.base}/maven/project/trunk</developerConnection>
-    <url>https://scm.dataconservancy.org/svn/maven/project/trunk</url>
+    <connection>scm:git:https://github.com/DataConservancy/dcs.git</connection>
+    <developerConnection>scm:git:https://github.com/DataConservancy/dcs.git</developerConnection>
+    <url>https://github.com/DataConservancy/dcs/maven/project/trunk</url>
   </scm>
 
   <modules>
