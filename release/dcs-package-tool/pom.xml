@@ -126,7 +126,7 @@
               </resourceBundles>
 
               <supplementalModelArtifacts>
-                <supplementalModelArtifact>org.dataconservancy:supplemental-resources:1.1.1-SNAPSHOT</supplementalModelArtifact>
+                <supplementalModelArtifact>org.dataconservancy:supplemental-resources:1.1.2-SNAPSHOT</supplementalModelArtifact>
               </supplementalModelArtifacts>
 
               <!-- Specify the path, relative to the JAR root, where the supplemental model file is located -->
