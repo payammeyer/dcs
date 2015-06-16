@@ -28,7 +28,7 @@
   <parent>
     <groupId>org.dataconservancy</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
   </parent>
   <profiles>
     <profile>
@@ -42,7 +42,7 @@
       <!-- Modules  =================================================== -->
 
       <modules>
-        <module>../../../dcs-packaging-tool/trunk</module>
+        <module>../../dcs-packaging-tool</module>
       </modules>
     </profile>
   </profiles>
@@ -157,8 +157,9 @@
       </plugin>
       
       <plugin>
-        <groupId>org.dataconservancy.maven.plugins</groupId>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.2</version>
       </plugin>
 
     </plugins>
