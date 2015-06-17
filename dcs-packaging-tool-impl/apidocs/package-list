@@ -1,0 +1,5 @@
+org.dataconservancy.packaging.tool.impl
+org.dataconservancy.packaging.tool.impl.generator
+org.dataconservancy.packaging.tool.impl.rules
+org.dataconservancy.packaging.tool.impl.rules.operations
+org.dataconservancy.packaging.tool.impl.support
