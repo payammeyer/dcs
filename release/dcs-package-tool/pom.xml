@@ -155,7 +155,21 @@
           </execution>
         </executions>
       </plugin>
-      
+
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-scm-publish-plugin</artifactId>
+          <version>1.0-beta-2</version>
+          <configuration>
+              <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
+              <checkinComment>Publishing javadoc for ${project.artifactId}:${project.version}</checkinComment>
+              <content>${project.build.directory}/staging/project-pom/dcs-packaging-tool</content>
+              <skipDeletedFiles>true</skipDeletedFiles>
+              <pubScmUrl>scm:git:https://github.com/DataConservancy/dcs.git</pubScmUrl>
+              <scmBranch>gh-pages</scmBranch>
+          </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
