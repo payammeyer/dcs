@@ -132,7 +132,7 @@
     <!-- Version of plexus-interactivity -->
     <dcs.project.plexusinteractivity.version>1.0-alpha-6</dcs.project.plexusinteractivity.version>
     <!-- Version of mockito in use -->
-    <dcs.project.mockito.version>1.10.8</dcs.project.mockito.version>
+    <dcs.project.mockito.version>1.10.19</dcs.project.mockito.version>
     <!-- Version of aspectj in use -->
     <dcs.project.aspectj.version>1.8.5</dcs.project.aspectj.version>
     <!-- Version of libphonenumber in use -->
@@ -1497,13 +1497,13 @@
       <dependency>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-module-junit4</artifactId>
-        <version>1.6.1</version>
+        <version>1.6.2</version>
       </dependency>
 
       <dependency>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-api-mockito</artifactId>
-        <version>1.5.1</version>
+        <version>1.6.2</version>
       </dependency>
 
       <dependency>
