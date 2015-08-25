@@ -58,7 +58,7 @@
     <!-- Version of Apache Abdera in use -->
     <dcs.project.abdera.version>1.1.2</dcs.project.abdera.version>
     <!-- Version of the Spring Framework in use -->
-    <dcs.project.spring.version>3.1.4.RELEASE</dcs.project.spring.version>
+    <dcs.project.spring.version>4.2.0.RELEASE</dcs.project.spring.version>
     <!-- Version of Apache Axiom in use --> 
     <dcs.project.axiom.version>1.2.10</dcs.project.axiom.version>
     <!-- Version of XStream in use -->
@@ -418,7 +418,7 @@
             <link>http://maven.dataconservancy.org/sites/model/apidocs/</link>
             <link>http://maven.dataconservancy.org/sites/access/apidocs/</link>
             <link>http://maven.dataconservancy.org/sites/archive/apidocs/</link>
-            <link>http://static.springsource.org/spring/docs/3.0.x/javadoc-api/</link>              
+            <link>http://static.springsource.org/spring/docs/4.2.x/javadoc-api/</link>
           </links>
         </configuration>
       </plugin>
