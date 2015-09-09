@@ -14,7 +14,9 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.dataconservancy.release</groupId>
   <artifactId>dcs-package-tool</artifactId>
@@ -22,9 +24,9 @@
   <packaging>pom</packaging>
   <name>DC Package Tool Release Pom</name>
   <description>A pom that aids in building the package tool release. </description>
-  
+
   <url>http://maven.dataconservancy.org/sites/agg/</url>
-  
+
   <parent>
     <groupId>org.dataconservancy</groupId>
     <artifactId>parent-pom</artifactId>
@@ -157,17 +159,17 @@
       </plugin>
 
       <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-scm-publish-plugin</artifactId>
-          <version>1.0-beta-2</version>
-          <configuration>
-              <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
-              <checkinComment>Publishing javadoc for ${project.artifactId}:${project.version}</checkinComment>
-              <content>${project.build.directory}/staging/project-pom/dcs-packaging-tool</content>
-              <skipDeletedFiles>true</skipDeletedFiles>
-              <pubScmUrl>scm:git:https://github.com/DataConservancy/dcs.git</pubScmUrl>
-              <scmBranch>gh-pages</scmBranch>
-          </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-publish-plugin</artifactId>
+        <version>1.0-beta-2</version>
+        <configuration>
+          <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
+          <checkinComment>Publishing javadoc for ${project.artifactId}:${project.version}</checkinComment>
+          <content>${project.build.directory}/staging/project-pom/dcs-packaging-tool</content>
+          <skipDeletedFiles>true</skipDeletedFiles>
+          <pubScmUrl>scm:git:https://github.com/DataConservancy/dcs.git</pubScmUrl>
+          <scmBranch>gh-pages</scmBranch>
+        </configuration>
       </plugin>
 
       <plugin>
