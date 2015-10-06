@@ -1548,6 +1548,12 @@
         <version>0.2</version>
       </dependency>
 
+      <dependency>
+        <groupId>nl.jqno.equalsverifier</groupId>
+        <artifactId>equalsverifier</artifactId>
+        <version>1.7.5</version>
+      </dependency>
+
     </dependencies>
 
   </dependencyManagement>
