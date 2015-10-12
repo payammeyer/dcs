@@ -1552,13 +1552,13 @@
       <dependency>
         <groupId>com.github.jsonld-java</groupId>
         <artifactId>jsonld-java-jena</artifactId>
-        <version>0.2</version>
+        <version>0.4.1</version>
       </dependency>
 
       <dependency>
         <groupId>com.github.jsonld-java</groupId>
         <artifactId>jsonld-java</artifactId>
-        <version>0.2</version>
+        <version>0.7.0</version>
       </dependency>
 
       <dependency>
