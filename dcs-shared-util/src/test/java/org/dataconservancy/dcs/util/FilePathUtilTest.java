@@ -15,6 +15,7 @@
  */
 package org.dataconservancy.dcs.util;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -90,11 +92,10 @@ public class FilePathUtilTest {
      * Tests that if a file is already the relative it's unchanged by the relativize method.
      */
     @Test
-    public void testRelativizeAlreadyRelativeFile() {
+    public void testRelativizeAlreadyRelativeFile() throws IOException {
         final String expectedPath = File.separator + "test" + File.separator + "file.txt";
         final File relativeFile = new File("/test/file.txt");
-        final File directory = tmpFolder.newFolder("test");
-        directory.deleteOnExit();
+        final File directory = tmpFolder.newFolder(UUID.randomUUID().toString());
         final String resultPath = FilePathUtil.relativizePath(directory.getPath(), relativeFile);
 
         assertTrue("Expected: " + expectedPath + " but was: " + resultPath, expectedPath.equalsIgnoreCase(resultPath));
@@ -104,10 +105,9 @@ public class FilePathUtilTest {
      * Tests that if a file is absolute it's made relative.
      */
     @Test
-    public void testRelativizeAbsoluteFile() {
+    public void testRelativizeAbsoluteFile() throws IOException {
         final String expectedPath = "relative" + File.separator + "file.txt";
-        final File directory = tmpFolder.newFolder("test");
-        directory.deleteOnExit();
+        final File directory = tmpFolder.newFolder(UUID.randomUUID().toString());
 
         final File relativeFile = new File(directory, "/relative/file.txt");
         final String resultPath = FilePathUtil.relativizePath(directory.getPath(), relativeFile);
@@ -122,9 +122,7 @@ public class FilePathUtilTest {
     public void testRelativizeFileNotUnderBasePath() throws IOException {
         final File testFile = new File("foo", "test.file");
         final String expectedPath = testFile.getPath();
-        final File directory = tmpFolder.newFolder("test");
-        directory.deleteOnExit();
-        testFile.deleteOnExit();
+        final File directory = tmpFolder.newFolder(UUID.randomUUID().toString());
 
         final String resultPath = FilePathUtil.relativizePath(directory.getPath(), testFile);
 
@@ -143,10 +141,8 @@ public class FilePathUtilTest {
      * Test that if the base file is null the original file is returned.
      */
     @Test
-    public void testRelativizeNullBaseFile() {
+    public void testRelativizeNullBaseFile() throws IOException {
         final String expectedPath = "relative" + File.separator + "file.txt";
-        final File directory = tmpFolder.newFolder("test");
-        directory.deleteOnExit();
 
         final File relativeFile = new File("relative/file.txt");
         final String resultPath = FilePathUtil.relativizePath(null, relativeFile);
@@ -543,23 +539,25 @@ public class FilePathUtilTest {
      */
     @Test
     public void testAbsolutizeNullBaseFile() throws IOException {
-        assertNull(FilePathUtil.absolutize(null, tmpFolder.newFile("test")));
+        File testFile = tmpFolder.newFile(UUID.randomUUID().toString());
+        assertNull(FilePathUtil.absolutize(null, testFile));
     }
 
     /**
      * Tests that null is returned if the file to absolutize is null
      */
     @Test
-    public void testAbsolutizeNullFile() {
-        assertNull(FilePathUtil.absolutize(tmpFolder.newFolder("test"), null));
+    public void testAbsolutizeNullFile() throws IOException {
+        File testFolder = tmpFolder.newFolder(UUID.randomUUID().toString());
+        assertNull(FilePathUtil.absolutize(testFolder, null));
     }
 
     /**
      * Tests that if the file is already absolute absolutize returns the same file.
      */
     @Test
-    public void testAbsolutizeAlreadyAbsoluteFile() {
-        final File testDir = tmpFolder.newFolder("absolute");
+    public void testAbsolutizeAlreadyAbsoluteFile() throws IOException {
+        final File testDir = tmpFolder.newFolder(UUID.randomUUID().toString());
         final File testFile = new File(testDir, "testFile");
 
         File returnedFile = FilePathUtil.absolutize(testDir, testFile);
@@ -572,8 +570,8 @@ public class FilePathUtilTest {
      * Tests that a file is correctly made absolute by prepending the base directory to it.
      */
     @Test
-    public void testAbsolutizeFile() {
-        final File testDir = tmpFolder.newFolder("absolute");
+    public void testAbsolutizeFile() throws IOException {
+        final File testDir = tmpFolder.newFolder(UUID.randomUUID().toString());
         final File testFile = new File("testFile");
         final String expectedPath = testDir.getPath() + File.separator + testFile.getPath();
         File returnedFile = FilePathUtil.absolutize(testDir, testFile);
@@ -676,7 +674,7 @@ public class FilePathUtilTest {
     }
 
     @Test
-    public void testIllegalCharacterDetectedInPath(){
+    public void testIllegalCharacterDetectedInPath() throws IOException {
         final File testFile = tmpFolder.newFolder("badFileName:oops");
         Assert.assertFalse(FilePathUtil.hasValidFilePath(testFile));
     }

@@ -32,15 +32,11 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import net.lingala.zip4j.core.ZipFile;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.dataconservancy.packaging.tool.api.PackageDescriptionCreator;
 import org.dataconservancy.packaging.tool.api.PackageDescriptionCreatorException;
@@ -358,7 +354,7 @@ public class GeneralPackageDescriptionCreatorTest {
     /* Verify that symlink cycles can be detected */
     @Test
     public void simLinkCycleTest() throws Exception {
-        File tempDir = tmpfolder.newFolder("moo");
+        File tempDir = tmpfolder.newFolder(UUID.randomUUID().toString());
 
         File subdir = new File(tempDir, "cow");
         subdir.mkdir();
@@ -386,7 +382,7 @@ public class GeneralPackageDescriptionCreatorTest {
     //TODO: These setReadable false tests don't work on windows for now the test only runs if that operation succeeded.
     @Test
     public void nonreadableFileTest() throws Exception {
-        File tempDir = tmpfolder.newFolder("moo");
+        File tempDir = tmpfolder.newFolder(UUID.randomUUID().toString());
 
         File subdir = new File(tempDir, "cow");
         subdir.mkdir();
@@ -400,6 +396,7 @@ public class GeneralPackageDescriptionCreatorTest {
                 /* Expected */
             }
         }
+
     }
 
     /* Verify that DataItem+DataFile files are sane (DC-1717) */
