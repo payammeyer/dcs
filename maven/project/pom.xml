@@ -163,6 +163,8 @@
     <dcs.project.libphonenumber.version>6.2</dcs.project.libphonenumber.version>
     <!-- Version of javax servlet-api in use -->
     <dcs.project.javaxservletapi>3.1.0</dcs.project.javaxservletapi>
+    <!-- Version of EqualsVerifier in use -->
+    <dcs.project.equalsverifier>1.7.5</dcs.project.equalsverifier>
   </properties>
 
 
@@ -1548,6 +1550,11 @@
         <version>0.2</version>
       </dependency>
 
+      <dependency>
+        <groupId>nl.jqno.equalsverifier</groupId>
+        <artifactId>equalsverifier</artifactId>
+        <version>${dcs.project.equalsverifier}</version>
+      </dependency>
     </dependencies>
 
   </dependencyManagement>
