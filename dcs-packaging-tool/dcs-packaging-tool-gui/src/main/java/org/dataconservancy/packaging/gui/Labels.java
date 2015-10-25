@@ -125,8 +125,28 @@ public class Labels {
         SHOW_IGNORED_TIP("showignored.tip"),
         CONTENT_DIRECTORY_LABEL("contentdirectory.label"),
         CREATE_NEW_PACKAGE("createnewpackage.label"),
-        OPEN_EXISTING_PACKAGE("openexistingpackage.label");
-
+        OPEN_EXISTING_PACKAGE("openexistingpackage.label"),
+        HOMEPAGE_PAGE("homepage.page"),
+        SELECT_DOMAIN_PROFILE_LABEL("selectdomainprofile.label"),
+        ADD_BUTTON("add.button"),
+        KEYWORD_LABEL("keyword.label"),
+        EXTERNAL_DESCRIPTION_LABEL("externaldescritption.label"),
+        INTERNAL_SENDER_IDENTIFIER_LABEL("internalsenderidentifier.label"),
+        INTERNAL_DESCRIPTION_LABEL("internaldescritption.label"),
+        SOURCE_ORGANIZATION_LABEL("sourceorganization.label"),
+        ORGANIZATION_ADDRESS_LABEL("organizatoinaddress.label"),
+        BAG_COUNT_LABEL("bagcount.label"),
+        BAG_GROUP_IDENTIFIER_LABEL("baggroupidentifier.label"),
+        RIGHTS_LABEL("rights.label"),
+        RIGHTS_URI_LABEL("rightsuri.label"),
+        BAGGING_DATE_LABEL("baggingdate.label"),
+        BAG_SIZE_LABEL("bagsize.label"),
+        PACKAGE_METADATA("packagemetadata.label"),
+        SERIALIZATION_FORMAT_LABEL("serialization.label"),
+        JSON_BUTTON("json.button"),
+        XML_BUTTON("xml.button"),
+        TURTLE_BUTTON("turtle.button"),
+        SELECT_PACKAGE_FILE_LABEL("selectpackagefile.label");
 
         private String property;
 

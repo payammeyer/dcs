@@ -101,11 +101,6 @@ public class CreateNewPackagePresenterImplTest extends BaseGuiTest {
                 }
 
                 @Override
-                public void goToNextPage() {
-                    showNextPage = true;
-                }
-
-                @Override
                 public void setPackageDescription(PackageDescription desc) {
                     description = desc;
                 }
@@ -220,29 +215,6 @@ public class CreateNewPackagePresenterImplTest extends BaseGuiTest {
         assertFalse(showNextPage);
         assertTrue(view.getErrorMessage().getText().contains(exceptionMsg));
         assertTrue(view.getErrorMessage().getText().contains(exceptionDetails));
-    }
-
-    /**
-     * Tests that setting an existing package description and hitting continue works correctly. 
-     * @throws IOException
-     */
-    @Test
-    public void testContinueWithExistingPackageDescription() throws IOException {
-        assertNull(description);
-        assertFalse(showDirectoryDialog);
-        chosenFile = tmpfolder.newFile("moo");
-
-        view.getChoosePackageDescriptionButton().fire();
-        assertTrue(showFileDialog);
-        
-        System.out.println(view.getErrorMessage().getText());
-        assertEquals(0, view.getErrorMessage().getText().length());
-        assertFalse(showNextPage);
-        view.getContinueButton().fire();
-        assertTrue(showNextPage);
-
-        assertEquals(0, view.getErrorMessage().getText().length());
-        assertNotNull(description);
     }
 
     private class ExecuteContinueRule implements TestRule {

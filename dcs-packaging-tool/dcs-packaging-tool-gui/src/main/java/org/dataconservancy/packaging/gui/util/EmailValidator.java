@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Johns Hopkins University
+ * Copyright 2014 Johns Hopkins University
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package org.dataconservancy.packaging.gui.presenter;
+package org.dataconservancy.packaging.gui.util;
+
+import java.util.regex.Pattern;
 
 /**
- * Used for controlling the homepage screen
+ * This is a simple EmailValidator based on commonly used regex.
  */
-public interface HomepagePresenter extends Presenter {
+public class EmailValidator {
+
+    private final static Pattern emailPattern = Pattern.compile("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$");
+
+    public static boolean isValidEmail(String email) {
+        return emailPattern.matcher(email).matches();
+    }
 
 }
