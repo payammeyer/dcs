@@ -165,6 +165,8 @@
     <dcs.project.javaxservletapi>3.1.0</dcs.project.javaxservletapi>
     <!-- Version of EqualsVerifier in use -->
     <dcs.project.equalsverifier>1.7.5</dcs.project.equalsverifier>
+    <!-- Version of BagIt lib in use -->
+    <dcs.project.bagit.version>4.9.0</dcs.project.bagit.version>
   </properties>
 
 
@@ -1275,7 +1277,14 @@
         <version>${dcs.project.jsonsimple.version}</version>
       </dependency>
       
-      
+      <!--
+       | BagIt
+       +-->
+      <dependency>
+          <groupId>gov.loc</groupId>
+          <artifactId>bagit</artifactId>
+          <version>${dcs.project.bagit.version}</version>
+      </dependency>
 
       <!-- 
         | Random/misc
@@ -1474,6 +1483,8 @@
         <artifactId>aspectjweaver</artifactId>
         <version>${dcs.project.aspectj.version}</version>
       </dependency>
+
+
 
         <!-- libphonenumber-->
 
